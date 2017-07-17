@@ -153,9 +153,11 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
         groupCipher = GroupCipher(self.store, senderKeyName)
         try:
             plaintext = groupCipher.decrypt(enc.getData())
+            #print("Plain before:", plaintext)
             padding = ord(plaintext[-1]) & 0xFF
             plaintext = plaintext[:-padding]
             plaintext = plaintext.encode() if sys.version_info >= (3, 0) else plaintext
+            #print("Plain after:", plaintext)
             self.parseAndHandleMessageProto(encMessageProtocolEntity, plaintext)
 
         except NoSessionException as e:
@@ -169,12 +171,16 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
         handled = False
         try:
             m.ParseFromString(serializedData)
+            #HERE you should print node to get the conversation dude
         except:
             print("DUMP:")
             print(serializedData)
             print([s for s in serializedData])
             print([ord(s) for s in serializedData])
             raise
+        
+        
+        
         if not m or not serializedData:
             raise ValueError("Empty message")
 

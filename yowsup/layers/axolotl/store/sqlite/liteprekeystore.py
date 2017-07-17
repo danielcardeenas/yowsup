@@ -36,7 +36,10 @@ class LitePreKeyStore(PreKeyStore):
         cursor = self.dbConn.cursor()
         serialized = preKeyRecord.serialize()
         cursor.execute(q, (preKeyId, buffer(serialized) if sys.version_info < (2,7) else serialized))
-        self.dbConn.commit()
+        try:
+            self.dbConn.commit()
+        except:
+            pass
 
     def containsPreKey(self, preKeyId):
         q = "SELECT record FROM prekeys WHERE prekey_id = ?"
@@ -48,4 +51,7 @@ class LitePreKeyStore(PreKeyStore):
         q = "DELETE FROM prekeys WHERE prekey_id = ?"
         cursor = self.dbConn.cursor()
         cursor.execute(q, (preKeyId,))
-        self.dbConn.commit()
+        try:
+            self.dbConn.commit()
+        except:
+            pass

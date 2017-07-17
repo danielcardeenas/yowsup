@@ -52,7 +52,10 @@ class LiteIdentityKeyStore(IdentityKeyStore):
                       pubKey,
                       privKey))
 
-        self.dbConn.commit()
+        try:
+            self.dbConn.commit()
+        except:
+            pass
 
     def saveIdentity(self, recipientId, identityKey):
         q = "DELETE FROM identities WHERE recipient_id=?"
@@ -65,7 +68,10 @@ class LiteIdentityKeyStore(IdentityKeyStore):
 
         pubKey = identityKey.getPublicKey().serialize()
         c.execute(q, (recipientId, buffer(pubKey) if sys.version_info < (2,7) else pubKey))
-        self.dbConn.commit()
+        try:
+            self.dbConn.commit()
+        except:
+            pass
 
     def isTrustedIdentity(self, recipientId, identityKey):
         q = "SELECT public_key from identities WHERE recipient_id = ?"

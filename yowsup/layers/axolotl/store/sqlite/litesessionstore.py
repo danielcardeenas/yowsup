@@ -38,7 +38,10 @@ class LiteSessionStore(SessionStore):
         c = self.dbConn.cursor()
         serialized = sessionRecord.serialize()
         c.execute(q, (recipientId, deviceId, buffer(serialized) if sys.version_info < (2,7) else serialized))
-        self.dbConn.commit()
+        try:
+            self.dbConn.commit()
+        except:
+            pass
 
     def containsSession(self, recipientId, deviceId):
         q = "SELECT record FROM sessions WHERE recipient_id = ? AND device_id = ?"
@@ -51,9 +54,15 @@ class LiteSessionStore(SessionStore):
     def deleteSession(self, recipientId, deviceId):
         q = "DELETE FROM sessions WHERE recipient_id = ? AND device_id = ?"
         self.dbConn.cursor().execute(q, (recipientId, deviceId))
-        self.dbConn.commit()
+        try:
+            self.dbConn.commit()
+        except:
+            pass
 
     def deleteAllSessions(self, recipientId):
         q = "DELETE FROM sessions WHERE recipient_id = ?"
         self.dbConn.cursor().execute(q, (recipientId,))
-        self.dbConn.commit()
+        try:
+            self.dbConn.commit()
+        except:
+            pass
