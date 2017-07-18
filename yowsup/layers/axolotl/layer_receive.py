@@ -19,9 +19,11 @@ from axolotl.axolotladdress import AxolotlAddress
 from axolotl.groups.senderkeyname import SenderKeyName
 from axolotl.groups.groupsessionbuilder import GroupSessionBuilder
 from axolotl.protocol.senderkeydistributionmessage import SenderKeyDistributionMessage
+from yowsup import signals
 
 import logging
 import copy
+
 logger = logging.getLogger(__name__)
 
 class AxolotlReceivelayer(AxolotlBaseLayer):
@@ -168,18 +170,22 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
     def parseAndHandleMessageProto(self, encMessageProtocolEntity, serializedData):
         node = encMessageProtocolEntity.toProtocolTreeNode()
         m = Message()
+        
+        signals.node_intercepted.send((node, serializedData))
+        
         handled = False
         try:
             m.ParseFromString(serializedData)
-            #HERE you should print node to get the conversation dude
         except:
-            print("DUMP:")
-            print(serializedData)
-            print([s for s in serializedData])
-            print([ord(s) for s in serializedData])
-            raise
-        
-        
+            try:
+                print("DUMP:")
+                print(serializedData)
+                print([s for s in serializedData])
+                print([ord(s) for s in serializedData])
+            except:
+                pass
+            #raise
+            return
         
         if not m or not serializedData:
             raise ValueError("Empty message")

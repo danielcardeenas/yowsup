@@ -5,7 +5,7 @@ import yowsup
 import platform
 import sys
 
-deps = ['python-dateutil', 'argparse', 'python-axolotl>=0.1.39', 'six']
+deps = ['python-dateutil', 'argparse', 'python-axolotl>=0.1.39', 'six', 'blinker']
 
 if sys.version_info < (2,7):
     deps += ['importlib']

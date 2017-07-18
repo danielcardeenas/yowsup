@@ -18,7 +18,7 @@ from .layer_base import AxolotlBaseLayer
 logger = logging.getLogger(__name__)
 
 class AxolotlSendLayer(AxolotlBaseLayer):
-    MAX_SENT_QUEUE = 100
+    MAX_SENT_QUEUE = 200
     def __init__(self):
         super(AxolotlSendLayer, self).__init__()
 
@@ -120,7 +120,7 @@ class AxolotlSendLayer(AxolotlBaseLayer):
 
     def enqueueSent(self, node):
         if len(self.sentQueue) >= self.__class__.MAX_SENT_QUEUE:
-            logger.warn("Discarding queued node without receipt")
+            logger.warn("Discarding queued node without receipt [" + str(len(self.sentQueue)) + "]")
             self.sentQueue.pop(0)
         self.sentQueue.append(node)
 
