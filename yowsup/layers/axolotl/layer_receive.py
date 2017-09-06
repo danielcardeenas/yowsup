@@ -262,18 +262,26 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
         pass
 
     def handleLocationMessage(self, originalEncNode, locationMessage):
-        messageNode = copy.deepcopy(originalEncNode)
-        messageNode["type"] = "media"
-        mediaNode = ProtocolTreeNode("media", {
-            "latitude": locationMessage.degrees_latitude,
-            "longitude": locationMessage.degress_longitude,
-            "name": "%s %s" % (locationMessage.name, locationMessage.address),
-            "url": locationMessage.url,
-            "encoding": "raw",
-            "type": "location"
-        }, data=locationMessage.jpeg_thumbnail)
-        messageNode.addChild(mediaNode)
-        self.toUpper(messageNode)
+        try:
+            messageNode = copy.deepcopy(originalEncNode)
+            messageNode["type"] = "media"
+            mediaNode = ProtocolTreeNode("media", {
+                "latitude": locationMessage.degrees_latitude,
+                "longitude": locationMessage.degress_longitude,
+                "name": "%s %s" % (locationMessage.name, locationMessage.address),
+                "url": locationMessage.url,
+                "encoding": "raw",
+                "type": "location"
+            }, data=locationMessage.jpeg_thumbnail)
+            messageNode.addChild(mediaNode)
+            self.toUpper(messageNode)
+        except:
+            if PROP_IGNORE_UNHANDLED:
+                self.toLower(originalEncNode)
+                logger.warning("Unhandled message, sending delivery receipt")
+            else:
+                print(m)
+                raise ValueError("Unhandled")
 
     def handleContactMessage(self, originalEncNode, contactMessage):
         messageNode = copy.deepcopy(originalEncNode)
