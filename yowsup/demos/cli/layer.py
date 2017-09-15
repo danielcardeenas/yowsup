@@ -544,9 +544,6 @@ class YowsupCliLayer(Cli, YowInterfaceLayer):
         	entity = VideoDownloadableMediaMessageProtocolEntity.fromFilePath(filePath, url, ip, to, caption = caption)
         self.toLower(entity)
 
-    def __str__(self):
-        return "CLI Interface Layer"
-
     ########### callbacks ############
 
     def onRequestUploadResult(self, jid, mediaType, filePath, resultRequestUploadIqProtocolEntity, requestUploadIqProtocolEntity, caption = None):
@@ -563,14 +560,17 @@ class YowsupCliLayer(Cli, YowInterfaceLayer):
             mediaUploader.start()
 
     def onRequestUploadError(self, jid, path, errorRequestUploadIqProtocolEntity, requestUploadIqProtocolEntity):
-        logger.error("Request upload for file %s for %s failed" % (path, jid))
+        return
+        #logger.error("Request upload for file %s for %s failed" % (path, jid))
 
     def onUploadError(self, filePath, jid, url):
-        logger.error("Upload file %s to %s for %s failed!" % (filePath, url, jid))
+        return
+        #logger.error("Upload file %s to %s for %s failed!" % (filePath, url, jid))
 
     def onUploadProgress(self, filePath, jid, url, progress):
-        sys.stdout.write("%s => %s, %d%% \r" % (os.path.basename(filePath), jid, progress))
-        sys.stdout.flush()
+        return
+        #sys.stdout.write("%s => %s, %d%% \r" % (os.path.basename(filePath), jid, progress))
+        #sys.stdout.flush()
 
     def onGetContactPictureResult(self, resultGetPictureIqProtocolEntiy, getPictureIqProtocolEntity):
         # do here whatever you want
