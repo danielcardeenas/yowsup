@@ -5,7 +5,7 @@ import yowsup
 import platform
 import sys
 
-deps = ['python-dateutil', 'argparse', 'python-axolotl>=0.1.39', 'six', 'blinker']
+deps = ['python-dateutil', 'argparse', 'python-axolotl>=0.1.39', 'six', 'blinker', 'pillow']
 
 if sys.version_info < (2,7):
     deps += ['importlib']
@@ -21,9 +21,9 @@ else:
 setup(
     name='yowsup2',
     version=yowsup.__version__,
-    url='http://github.com/tgalal/yowsup/',
+    url='http://github.com/danielcardeenas/yowsup/',
     license='GPL-3+',
-    author='Tarek Galal',
+    author='Tarek Galal, Daniel Cardenas',
     tests_require=[],
     install_requires = deps,
     scripts = ['yowsup-cli'],
