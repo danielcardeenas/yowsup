@@ -277,7 +277,7 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             self.toUpper(messageNode)
         except:
             if PROP_IGNORE_UNHANDLED:
-                self.toLower(originalEncNode)
+                self.toLower(OutgoingReceiptProtocolEntity(node["id"], node["from"], participant=node["participant"]).toProtocolTreeNode())
                 logger.warning("Unhandled message, sending delivery receipt")
             else:
                 print(m)
