@@ -1,17 +1,19 @@
 from yowsup.common.http.warequest import WARequest
 from yowsup.common.http.waresponseparser import JSONResponseParser
-import socket, ssl, os, hashlib, sys
-from time import sleep
-import threading
-import logging
 from yowsup.common.tools import MimeTools
-import base64
-import hmac
-from Crypto.Cipher import AES
-import binascii
 from axolotl.kdf.hkdfv3 import HKDFv3
 from axolotl.sessioncipher import pad
 from axolotl.util.byteutil import ByteUtil
+
+from Crypto.Cipher import AES
+
+from time import sleep
+import socket, ssl, os, hashlib, sys
+import threading
+import logging
+import base64
+import hmac
+import binascii
 
 logger = logging.getLogger(__name__)
 
@@ -72,13 +74,10 @@ class MediaUploader(WARequest, threading.Thread):
         return finalEnc
 
     def run(self):
-
         sourcePath = self.sourcePath
         uploadUrl = self.uploadUrl
         _host = uploadUrl.replace("https://","")
-
         self.url = _host[:_host.index('/')]
-
 
         try:
             filename = os.path.basename(sourcePath)
@@ -87,21 +86,23 @@ class MediaUploader(WARequest, threading.Thread):
             f = open(sourcePath, 'rb')
             stream = f.read()
             f.close()
+            
             refkey = binascii.hexlify(os.urandom(32))
-            stream=self.encryptImg(stream,refkey)
-            fenc = open(filename+".enc", 'wb')  # bahtiar
+            stream = self.encryptImg(stream,refkey)
+            
+            fenc = open(filename + ".enc", 'wb')
             fenc.write(stream)
             fenc.seek(0, 2)
+            
             filesize=fenc.tell()
             fenc.close()
-            filesize2=len(stream)
+            filesize2 = len(stream)
 
             sha1 = hashlib.sha256()
             sha1.update(stream)
             b64Hash = base64.b64encode(sha1.digest())
 
             file_enc_sha256 = hashlib.sha256(stream).hexdigest()
-
             self.sock.connect((self.url, self.port))
             ssl_sock = ssl.wrap_socket(self.sock)
 
@@ -194,9 +195,14 @@ class MediaUploader(WARequest, threading.Thread):
             if result["url"] is not None:
                 if self.successCallback:
                     # self.successCallback(sourcePath, self.jid, result["url"])
-                    result["mediaKey"]=refkey
-                    result["file_enc_sha256"]=file_enc_sha256
+                    result["mediaKey"] = refkey
+                    result["file_enc_sha256"] = file_enc_sha256
                     self.successCallback(sourcePath, self.jid, result)
+                    
+                    try:
+                        os.remove(filename + ".enc")
+                    except e:
+                        print("Error while cleaning image enc" % (filename + ".enc"))
             else:
                 logger.exception("uploadUrl: %s, result of uploading media has no url" % uploadUrl)
                 if self.errorCallback:
