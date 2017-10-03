@@ -201,7 +201,7 @@ class MediaUploader(WARequest, threading.Thread):
                     
                     try:
                         os.remove(filename + ".enc")
-                    except e:
+                    except Exception as e:
                         print("Error while cleaning image enc" % (filename + ".enc"))
             else:
                 logger.exception("uploadUrl: %s, result of uploading media has no url" % uploadUrl)

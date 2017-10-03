@@ -163,7 +163,7 @@ class MimeTools:
     mimetypes.init() # Load default mime.types
     try:
         mimetypes.init([MIME_FILE]) # Append whatsapp mime.types
-    except exception as e:
+    except Exception as e:
         logger.warning("Mime types supported can't be read. System mimes will be used. Cause: " + e.message)
 
     @staticmethod
@@ -172,6 +172,13 @@ class MimeTools:
         if mimeType is None:
             raise Exception("Unsupported/unrecognized file type for: "+filepath);
         return mimeType
+        
+    @staticmethod
+    def getExtension(mimetype):
+        ext = mimetypes.guess_extension(mimetype.split(';')[0])
+        if ext is None:
+            raise Exception("Unsupported/unrecognized mimetype: "+mimetype);
+        return ext
 
 class VideoTools:
     @staticmethod
