@@ -90,13 +90,19 @@ class MediaUploader(WARequest, threading.Thread):
             refkey = binascii.hexlify(os.urandom(32))
             stream = self.encryptImg(stream,refkey)
             
-            fenc = open(filename + ".enc", 'wb')
+            fenc = open(sourcePath + ".enc", 'wb')
             fenc.write(stream)
             fenc.seek(0, 2)
             
-            filesize=fenc.tell()
+            filesize = fenc.tell()
             fenc.close()
             filesize2 = len(stream)
+            
+            print(sourcePath)
+            #try:
+            #    os.remove(sourcePath + ".enc")
+            #except Exception as e:
+            #    print("Error while cleaning image enc" % (filename + ".enc"))
 
             sha1 = hashlib.sha256()
             sha1.update(stream)
@@ -177,9 +183,7 @@ class MediaUploader(WARequest, threading.Thread):
             if self.progressCallback:
                 self.progressCallback(self.sourcePath, self.jid, uploadUrl, 100)
 
-
             lines = data.decode().splitlines()
-
 
             result = None
 
@@ -198,11 +202,6 @@ class MediaUploader(WARequest, threading.Thread):
                     result["mediaKey"] = refkey
                     result["file_enc_sha256"] = file_enc_sha256
                     self.successCallback(sourcePath, self.jid, result)
-                    
-                    try:
-                        os.remove(filename + ".enc")
-                    except Exception as e:
-                        print("Error while cleaning image enc" % (filename + ".enc"))
             else:
                 logger.exception("uploadUrl: %s, result of uploading media has no url" % uploadUrl)
                 if self.errorCallback:
