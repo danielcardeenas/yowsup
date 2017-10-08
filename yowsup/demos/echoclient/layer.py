@@ -7,6 +7,8 @@ class EchoLayer(YowInterfaceLayer):
 
         if messageProtocolEntity.getType() == 'text':
             self.onTextMessage(messageProtocolEntity)
+        if messageProtocolEntity.getType() == 'complex':
+            self.onTextMessage(messageProtocolEntity)
         elif messageProtocolEntity.getType() == 'media':
             self.onMediaMessage(messageProtocolEntity)
 

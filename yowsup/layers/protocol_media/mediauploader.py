@@ -98,11 +98,10 @@ class MediaUploader(WARequest, threading.Thread):
             fenc.close()
             filesize2 = len(stream)
             
-            print(sourcePath)
-            #try:
-            #    os.remove(sourcePath + ".enc")
-            #except Exception as e:
-            #    print("Error while cleaning image enc" % (filename + ".enc"))
+            try:
+                os.remove(sourcePath + ".enc")
+            except Exception as e:
+                print("Error while cleaning image enc" % (filename + ".enc"))
 
             sha1 = hashlib.sha256()
             sha1.update(stream)
