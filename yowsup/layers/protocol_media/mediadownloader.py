@@ -15,21 +15,12 @@ class MediaDownloader:
         self.errorCallback = errorClbk
         self.progressCallback = progressCallback
 
-    def download(self, url = ""):
+    def download(self, url="", path=""):
         try:
-
-            if not url:
-                if self.url:
-                    url = "https://" if self.port == 443 else "http://"
-                    url = url + self.url
-                    url = url + "?" + urlencode(self.params)
-                    logger.debug("URL is %s" % url)
-                else:
-                    raise Exception("No url specified for fetching")
-
             u = urlopen(url)
 
-            path = tempfile.mkstemp()[1]
+            if path == "":
+                path = "app/assets/received/" + tempfile.mkstemp()[1].rsplit('/', 1)[-1]
             with open(path, "wb") as f:
                 meta = u.info()
 
@@ -57,6 +48,8 @@ class MediaDownloader:
 
             if self.successCallback:
                 self.successCallback(path)
+                
+            return path;
         except:
             logger.exception("Error occured at transfer")
             if self.errorCallback:

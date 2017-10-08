@@ -3,11 +3,12 @@ from yowsup.layers.interface                           import YowInterfaceLayer,
 class EchoLayer(YowInterfaceLayer):
 
     @ProtocolEntityCallback("message")
-    def onMessage(self, messageProtocolEntity):
-
+    def getMediaMessageBody(self, message):
+        if message.getMediaType() in ("image", "audio", "video"):
+            return self.getDownloadableMediaMessageBody(message)
+        else:
+            return "[Media Type: %s]" % message.getMediaType()(self, messageProtocolEntity)
         if messageProtocolEntity.getType() == 'text':
-            self.onTextMessage(messageProtocolEntity)
-        if messageProtocolEntity.getType() == 'complex':
             self.onTextMessage(messageProtocolEntity)
         elif messageProtocolEntity.getType() == 'media':
             self.onMediaMessage(messageProtocolEntity)

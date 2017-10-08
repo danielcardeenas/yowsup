@@ -51,7 +51,7 @@ class MediaUploader(WARequest, threading.Thread):
         a = s + y.encode()
         return a
 
-    def encryptImg(self,img, refkey):
+    def encryptImg(self, img, refkey):
         derivative = HKDFv3().deriveSecrets(binascii.unhexlify(refkey),
                                             binascii.unhexlify("576861747341707020496d616765204b657973"), 112)
         parts = ByteUtil.split(derivative, 16, 32)
@@ -88,7 +88,7 @@ class MediaUploader(WARequest, threading.Thread):
             f.close()
             
             refkey = binascii.hexlify(os.urandom(32))
-            stream = self.encryptImg(stream,refkey)
+            stream = self.encryptImg(stream, refkey)
             
             fenc = open(sourcePath + ".enc", 'wb')
             fenc.write(stream)

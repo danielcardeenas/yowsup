@@ -210,7 +210,7 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
         # TODO: Change name of this message type since its not url_message anymore
         # Whenever a @tag message or an anwer message is sended fits inside here
         elif m.HasField("url_message"):
-            print("Special message received")
+            #print("Special message received")
             #self.handleUrlMessage(node, m.url_message)
             self.handleComplexMessage(node, m.url_message)
             
@@ -237,10 +237,8 @@ class AxolotlReceivelayer(AxolotlBaseLayer):
             if PROP_IGNORE_UNHANDLED:
                 print("Ignoring, send ack")
                 self.toLower(OutgoingReceiptProtocolEntity(node["id"], node["from"], participant=node["participant"]).toProtocolTreeNode())
-                logger.warning("Unhandled message, sending delivery receipt")
             else:
-                print(m)
-                raise ValueError("Unhandled")
+                raise ValueError("Unhandled message")
 
     def handleSenderKeyDistributionMessage(self, senderKeyDistributionMessage, axolotlAddress):
         groupId = senderKeyDistributionMessage.groupId
